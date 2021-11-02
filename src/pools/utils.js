@@ -6,7 +6,6 @@ const addresses = require('../lib/data/addresses.json')
 const { default: BigNumber } = require('bignumber.js')
 const { getWeeklyCompound, getDailyCompound } = require('../lib/utils')
 const { getTokenPrice } = require('../prices')
-const tokenAddresses = require('../lib/data/addresses.json')
 const { web3Socket, web3 } = require('../lib/web3')
 const { pool: poolContractInfo, potPool: potPoolContractInfo } = require('../lib/web3/contracts')
 
@@ -164,11 +163,11 @@ const getPoolStatsPerType = async (pool, poolContractData, lpTokenData, weeklyRe
         if (
           !weeklyRewardRateOverride &&
           pool.chain === CHAIN_TYPES.ETH &&
-          (rewardTokenAddress === tokenAddresses.iFARM ||
-            rewardTokenAddress === tokenAddresses.FARM)
+          (rewardTokenAddress === addresses.iFARM ||
+            rewardTokenAddress === addresses.FARM)
         ) {
           const wsPoolInstance = new web3Socket.eth.Contract(
-            rewardTokenAddress === tokenAddresses.iFARM
+            rewardTokenAddress === addresses.iFARM
               ? potPoolContractInfo.contract.abi
               : poolContractInfo.contract.abi,
             pool.contractAddress,
@@ -193,7 +192,7 @@ const getPoolStatsPerType = async (pool, poolContractData, lpTokenData, weeklyRe
           if (rewardEvents.length > 0) {
             await forEach(rewardEvents, async event => {
               const tx = await web3.eth.getTransaction(event.txHash)
-              if (tx.from === tokenAddresses.FOOD) {
+              if (tx.from === addresses.FOOD) {
                 filteredEvents.push(event)
               }
             })
